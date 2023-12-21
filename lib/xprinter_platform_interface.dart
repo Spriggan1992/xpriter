@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'xprinter_method_channel.dart';
@@ -27,13 +28,9 @@ abstract class XprinterPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<bool> connect(String ip);
-
-  // Future<bool> disconnect();
-
-  // Future<String> status();
-
-  // Future<bool> sendCommand(String command);
-
-  // Future<bool> sendCommandAndFile(String command, String filepath);
+   Future<bool> sendToPrint({
+    required String ip,
+    required Uint8List imageBytes,
+    required int amount,
+  });
 }
