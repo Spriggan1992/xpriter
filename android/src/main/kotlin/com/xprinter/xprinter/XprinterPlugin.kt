@@ -85,5 +85,8 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
       else -> result.notImplemented()
     }
   }
+  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    channel.setMethodCallHandler(null)
+  }
 }
 
