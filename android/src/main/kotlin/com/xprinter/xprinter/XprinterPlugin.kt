@@ -70,8 +70,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
   }
 
   private fun printBitmap(bitmapBytes: ByteArray, amount: Int) {
-    val bitmap = BitmapFactory.
-    decodeByteArray(bitmapBytes, 0, bitmapBytes.size)
+    val bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.size)
             tscPrinter!!.sizeMm (700.0, 1200.0)
               .gapMm(0.0, 0.0)
               .cls()
