@@ -45,7 +45,7 @@ class MethodChannelXprinter extends XprinterPlatform {
     return await methodChannel.invokeMethod('print', {
       'ip': ip,
       'bitmapBytes': imageBytes,
-      'amount': int,
+      'amount': amount,
     });
   }
 
