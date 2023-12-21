@@ -61,7 +61,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
       .cls()
       .bitmap(0, 0, TSCConst.BMP_MODE_OVERWRITE, 1000, bitmap)
       .print(amount)
-//    disconnect()
+    disconnect()
     }
   private fun disconnect() {
     tscPrinter = null
