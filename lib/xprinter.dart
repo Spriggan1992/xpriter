@@ -36,12 +36,4 @@ class Xprinter {
     );
     return _connected;
   }
-
-  // Future<bool> sendCommandAndFile(String command, String filepath) {
-  //   return channel.sendCommandAndFile(command, filepath);
-  // }
-
-  // Future<String> status() {
-  //   return channel.status();
-  // }
 }

@@ -65,9 +65,9 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
   override fun onMethodCall(call: MethodCall, result: Result) {
     when (call.method) {
       "print" -> {
-        if (tscPrinter == null) {
-          result.success(false)
-        } else {
+//        if (tscPrinter == null) {
+//          result.success(false)
+//        } else {
           val arguments = call.arguments as HashMap<*, *>
           val isValid = arguments.containsKey("bitmapBytes") && arguments.containsKey("amount") && arguments.containsKey("ip")
           if (isValid) {
@@ -81,8 +81,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
             result.error("invalid_argument", "argument 'ip' and 'port' not found", null)
           }
         }
-      }
-
+//      }
       else -> result.notImplemented()
     }
   }
