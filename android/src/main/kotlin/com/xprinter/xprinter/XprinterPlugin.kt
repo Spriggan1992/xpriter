@@ -82,7 +82,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
         }
       }
       "check_connection"-> {
-        result.success(isConnected != null && isConnected == true)
+        result.success(tscPrinter != null)
       }
       "print" -> {
           val arguments = call.arguments as HashMap<*, *>
