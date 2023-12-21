@@ -1,29 +1,20 @@
 package com.xprinter.xprinter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.StrictMode
-import androidx.annotation.NonNull
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
-import io.flutter.embedding.engine.plugins.activity.ActivityAware
-import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
-import io.flutter.plugin.common.EventChannel
+
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import net.posprinter.IDeviceConnection
-import net.posprinter.IPOSListener
 import net.posprinter.POSConnect
-import net.posprinter.POSConst
-import net.posprinter.POSPrinter
 import net.posprinter.TSCConst
 import net.posprinter.TSCPrinter
-import net.posprinter.ZPLConst
-import net.posprinter.ZPLPrinter
-import java.io.FileInputStream
+
 
 
 /** XprinterPlugin */
@@ -50,7 +41,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
   private fun connectTSC(ip: String) {
     POSConnect.init(context)
     curConnect = POSConnect.createDevice(3)
-
     curConnect!!.connect(ip) { code, _ ->
       when (code) {
         POSConnect.CONNECT_SUCCESS -> {
@@ -59,11 +49,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
         POSConnect.CONNECT_FAIL -> {
           isConnected = true
         }
-        POSConnect.CONNECT_INTERRUPT -> {
-
-        }
-
-
       }
     }
     tscPrinter = TSCPrinter(curConnect)
@@ -71,11 +56,11 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
 
   private fun printBitmap(bitmapBytes: ByteArray, amount: Int) {
     val bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.size)
-            tscPrinter!!.sizeMm (700.0, 1200.0)
-              .gapMm(0.0, 0.0)
-              .cls()
-              .bitmap(0, 0, TSCConst.BMP_MODE_OVERWRITE, 1000, bitmap)
-              .print(amount)
+    tscPrinter!!.sizeMm (700.0, 1200.0)
+      .gapMm(0.0, 0.0)
+      .cls()
+      .bitmap(0, 0, TSCConst.BMP_MODE_OVERWRITE, 1000, bitmap)
+      .print(amount)
     disconnect()
     }
   private fun disconnect() {
