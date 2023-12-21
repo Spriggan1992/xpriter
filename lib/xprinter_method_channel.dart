@@ -19,23 +19,19 @@ class MethodChannelXprinter extends XprinterPlatform {
     return version;
   }
 
-  // @override
-  // Future<bool> connect(String ip) async {
-  //   final status =
-  //       await methodChannel.invokeMethod<bool>('connect', {"ip": ip});
-  //   return status ?? false;
-  // }
+  @override
+  Future<bool> connect(String ip) async {
+    final status =
+        await methodChannel.invokeMethod<bool>('connect', {"ip": ip});
+    return status ?? false;
+  }
 
-  // @override
-  // Future<String> status() async {
-  //   return await methodChannel.invokeMethod('status');
-  // }
+  @override
+  Future<bool> checkConnection() async {
+    final status = await methodChannel.invokeMethod<bool>('check_connection');
+    return status ?? false;
+  }
 
-  // @override
-  // Future<bool> sendCommand(String command) async {
-  //   return await methodChannel
-  //       .invokeMethod("send_command", {"command": command});
-  // }
   @override
   Future<bool> sendToPrint({
     required String ip,
@@ -48,16 +44,4 @@ class MethodChannelXprinter extends XprinterPlatform {
       'amount': amount,
     });
   }
-
-  // @override
-  // Future<bool> sendFile(String filepath) async {
-  //   return await methodChannel
-  //       .invokeMethod("print_file", {"file_path": filepath});
-  // }
-
-  // @override
-  // Future<bool> sendCommandAndFile(String command, String filepath) async {
-  //   return await methodChannel.invokeMethod(
-  //       "send_command_and_file", {"command": command, "filepath": filepath});
-  // }
 }

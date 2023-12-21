@@ -43,9 +43,10 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> print() async {
     final bytes = await PdfService().getbitmap();
-    // final connection = await _xprinterPlugin.sendCommand(bytes);
+    final connection = await _xprinterPlugin.sendToPrint(
+        ip: '192.168.1.99', imageBytes: bytes, amount: 1);
     setState(() {
-      // _platformVersion = connection.toString();
+      _platformVersion = connection.toString();
     });
   }
 
@@ -57,32 +58,6 @@ class _MyAppState extends State<MyApp> {
   //     _platformVersion = connection.toString();
   //   });
   // }
-
-  Future<void> printFile() async {
-    final file =
-        await _getFileFromAssets('assets/images/sample1_page-0001.jpg');
-    // final connection = await _xprinterPlugin.printFile(file.path);
-    setState(() {
-      // _platformVersion = connection.toString();
-    });
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> getStatus() async {
-    // final connection = await _xprinterPlugin.status();
-    setState(() {
-      // _platformVersion = connection.toString();
-    });
-  }
-
-  Future<void> sendFonts() async {
-    final fontFile = await _getFileFromAssets('assets/fonts/Arial.ttf');
-    final size = await fontFile.length();
-    // await _xprinterPlugin.sendCommandAndFile(
-    //   'DOWNLOAD F,"Arial.ttf",$size,',
-    //   fontFile.path,
-    // );
-  }
 
   Future<File> _getFileFromAssets(String asset) async {
     final byteData = await rootBundle.load(asset);
@@ -112,17 +87,8 @@ class _MyAppState extends State<MyApp> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-                onPressed: () async => await initPlatformState(),
-                child: const Text('Connect')),
-            ElevatedButton(
-                onPressed: () async => await sendFonts(),
-                child: const Text('font')),
-            ElevatedButton(
                 onPressed: () async => await print(),
                 child: const Text('print')),
-            ElevatedButton(
-                onPressed: () async => await printFile(),
-                child: const Text('printFile')),
           ],
         ),
       ),

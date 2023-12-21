@@ -36,6 +36,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
   private lateinit var context: Context
   private var curConnect: IDeviceConnection? = null
   private var tscPrinter  : TSCPrinter? = null
+  private  var isConnected : Boolean? = null
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
@@ -49,39 +50,69 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
   private fun connectTSC(ip: String) {
     POSConnect.init(context)
     curConnect = POSConnect.createDevice(3)
-    curConnect!!.connect(ip) { a, b ->
+
+    curConnect!!.connect(ip) { code, _ ->
+      when (code) {
+        POSConnect.CONNECT_SUCCESS -> {
+          isConnected = true
+        }
+        POSConnect.CONNECT_FAIL -> {
+          isConnected = true
+        }
+        POSConnect.CONNECT_INTERRUPT -> {
+
+        }
+
+
+      }
     }
     tscPrinter = TSCPrinter(curConnect)
   }
+
   private fun printBitmap(bitmapBytes: ByteArray, amount: Int) {
-    val bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.size)
+    val bitmap = BitmapFactory.
+    decodeByteArray(bitmapBytes, 0, bitmapBytes.size)
             tscPrinter!!.sizeMm (700.0, 1200.0)
               .gapMm(0.0, 0.0)
               .cls()
               .bitmap(0, 0, TSCConst.BMP_MODE_OVERWRITE, 1000, bitmap)
               .print(amount)
+    disconnect()
     }
+  private fun disconnect() {
+    tscPrinter = null
+    curConnect?.close()
+    isConnected = null
+  }
 
   override fun onMethodCall(call: MethodCall, result: Result) {
     when (call.method) {
+      "connect"-> {
+        val arguments = call.arguments as HashMap<*, *>
+        if(arguments.containsKey("ip")){
+          val ip = arguments["ip"] as String
+          connectTSC(ip)
+          result.success(true)
+        }else{
+          result.error("invalid_argument", "argument 'ip' not found", null)
+        }
+      }
+      "check_connection"-> {
+        result.success(isConnected == null || isConnected == false)
+      }
       "print" -> {
-//        if (tscPrinter == null) {
-//          result.success(false)
-//        } else {
           val arguments = call.arguments as HashMap<*, *>
-          val isValid = arguments.containsKey("bitmapBytes") && arguments.containsKey("amount") && arguments.containsKey("ip")
+          val isValid = arguments.containsKey("bitmapBytes") && arguments.containsKey("amount")
           if (isValid) {
             val bitmapBytes = arguments["bitmapBytes"] as ByteArray
             val amount = arguments["amount"] as Int
-            val ip = arguments["ip"] as String
-            connectTSC(ip)
             printBitmap(bitmapBytes, amount)
             result.success(true)
           } else {
-            result.error("invalid_argument", "argument 'ip' and 'port' not found", null)
+            result.error("invalid_argument", "argument 'bitmapBytes' and 'amount' not found", null)
+            disconnect()
           }
         }
-//      }
       else -> result.notImplemented()
     }
   }
