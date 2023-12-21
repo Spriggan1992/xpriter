@@ -50,14 +50,13 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  // Future<void> print() async {
-  //   // final bytes = await PdfService().getbitmap();
-  //   var template = (await rootBundle.loadString('assets/templates/rus.zpl'));
-  //   final connection = await _xprinterPlugin.sendCommand(template);
-  //   setState(() {
-  //     _platformVersion = connection.toString();
-  //   });
-  // }
+  Future<void> connect() async {
+    // final bytes = await PdfService().getbitmap();
+    final connection = await _xprinterPlugin.connect('192.168.1.99');
+    setState(() {
+      _platformVersion = connection.toString();
+    });
+  }
 
   Future<File> _getFileFromAssets(String asset) async {
     final byteData = await rootBundle.load(asset);
@@ -86,6 +85,9 @@ class _MyAppState extends State<MyApp> {
               child: Text('Running on: $_platformVersion'),
             ),
             const SizedBox(height: 20),
+            ElevatedButton(
+                onPressed: () async => await connect(),
+                child: const Text('connect')),
             ElevatedButton(
                 onPressed: () async => await print(),
                 child: const Text('print')),
