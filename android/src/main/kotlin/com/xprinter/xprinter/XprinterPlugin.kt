@@ -44,7 +44,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
           isConnected = true
         }
         POSConnect.CONNECT_FAIL -> {
-          isConnected = true
+          isConnected = false
         }
       }
     }
