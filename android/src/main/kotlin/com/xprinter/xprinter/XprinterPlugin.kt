@@ -60,7 +60,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
     tscPrinter!!.sizeMm (70.0, 120.0)
       .gapMm(0.0, 0.0)
       .cls()
-      .bitmap(0, 0, TSCConst.BMP_MODE_XOR, 580, bitmap)
+      .bitmap(0, 0, TSCConst.BMP_MODE_XOR, 400, bitmap)
       .print(amount)
 //    disconnect()
     }
