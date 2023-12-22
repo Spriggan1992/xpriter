@@ -9,8 +9,16 @@ class Xprinter {
     return await channel.connect(ip);
   }
 
+  Future<void> disconnect() async {
+    return await channel.disconnect();
+  }
+
   Future<bool> checkConnection() async {
     return await channel.checkConnection();
+  }
+
+  Future<bool> checkConnectionWithStatus() async {
+    return await channel.checkConnectionWithStatus();
   }
 
   Future<bool> sendToPrintBytes({
