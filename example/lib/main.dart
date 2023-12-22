@@ -41,10 +41,21 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  Future<void> print() async {
+  Future<void> printBytes() async {
     final bytes = await PdfService().getbitmap();
-    final connection = await _xprinterPlugin.sendToPrint(
+    final connection = await _xprinterPlugin.sendToPrintBytes(
         ip: '192.168.1.99', imageBytes: bytes, amount: 1);
+    setState(() {
+      _platformVersion = connection.toString();
+    });
+  }
+
+  Future<void> printFilePath() async {
+    final bytes = await PdfService().getbitmap();
+    final file = await PdfService().getFileFromAssets(bytes);
+
+    final connection = await _xprinterPlugin.sendToPrintFilePath(
+        ip: '192.168.1.99', path: file.path, amount: 1);
     setState(() {
       _platformVersion = connection.toString();
     });
@@ -75,8 +86,11 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () async => await connect(),
                 child: const Text('connect')),
             ElevatedButton(
-                onPressed: () async => await print(),
-                child: const Text('print')),
+                onPressed: () async => await printBytes(),
+                child: const Text('printBytes')),
+            ElevatedButton(
+                onPressed: () async => await printFilePath(),
+                child: const Text('printFilePath')),
           ],
         ),
       ),
@@ -94,6 +108,14 @@ class PdfService {
     // final pdfBytes = await file.readAsBytes();
 
     return pdfBytes;
+  }
+
+  Future<File> getFileFromAssets(Uint8List bytes) async {
+    final tempDir = await getTemporaryDirectory();
+    final tempPath = tempDir.path;
+    var filePath = '$tempPath/sticker.jpeg';
+
+    return File(filePath).writeAsBytes(bytes);
   }
 
   Future<Uint8List> getPdfBytes() async {

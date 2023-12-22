@@ -64,6 +64,16 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
       .print(amount)
 //    disconnect()
     }
+  private fun printBitmapFromPath(path: String, amount: Int) {
+    val bitmap = BitmapFactory.decodeFile(path)
+
+    tscPrinter!!.sizeMm (70.0, 120.0)
+      .gapMm(0.0, 0.0)
+      .cls()
+      .bitmap(0, 0, TSCConst.BMP_MODE_XOR, 500, bitmap)
+      .print(amount)
+//    disconnect()
+  }
   private fun disconnect() {
     tscPrinter = null
     curConnect?.close()
@@ -98,6 +108,19 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
             disconnect()
           }
         }
+      "print_from_file" -> {
+        val arguments = call.arguments as HashMap<*, *>
+        val isValid = arguments.containsKey("path") && arguments.containsKey("amount")
+        if (isValid) {
+          val path = arguments["path"] as String
+          val amount = arguments["amount"] as Int
+          printBitmapFromPath(path, amount)
+          result.success(true)
+        } else {
+          result.error("invalid_argument", "argument 'bitmapBytes' and 'amount' not found", null)
+          disconnect()
+        }
+      }
       else -> result.notImplemented()
     }
   }

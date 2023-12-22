@@ -33,7 +33,7 @@ class MethodChannelXprinter extends XprinterPlatform {
   }
 
   @override
-  Future<bool> sendToPrint({
+  Future<bool> sendToPrintBytes({
     required String ip,
     required Uint8List imageBytes,
     required int amount,
@@ -41,6 +41,19 @@ class MethodChannelXprinter extends XprinterPlatform {
     return await methodChannel.invokeMethod('print', {
       'ip': ip,
       'bitmapBytes': imageBytes,
+      'amount': amount,
+    });
+  }
+
+  @override
+  Future<bool> sendToPrintFilePath({
+    required String ip,
+    required String path,
+    required int amount,
+  }) async {
+    return await methodChannel.invokeMethod('print_from_file', {
+      'ip': ip,
+      'path': path,
       'amount': amount,
     });
   }

@@ -28,9 +28,15 @@ abstract class XprinterPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<bool> sendToPrint({
+  Future<bool> sendToPrintBytes({
     required String ip,
     required Uint8List imageBytes,
+    required int amount,
+  });
+
+  Future<bool> sendToPrintFilePath({
+    required String ip,
+    required String path,
     required int amount,
   });
 
