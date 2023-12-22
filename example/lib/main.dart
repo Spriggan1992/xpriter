@@ -58,20 +58,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  Future<File> _getFileFromAssets(String asset) async {
-    final byteData = await rootBundle.load(asset);
-    final buffer = byteData.buffer;
-    Directory tempDir = await getTemporaryDirectory();
-    String tempPath = tempDir.path;
-    final parts = asset.split(RegExp('/'));
-    var filePath = '$tempPath/${parts.last}';
-
-    return File(filePath).writeAsBytes(buffer.asUint8List(
-      byteData.offsetInBytes,
-      byteData.lengthInBytes,
-    ));
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -100,7 +86,7 @@ class _MyAppState extends State<MyApp> {
 
 class PdfService {
   Future<Uint8List> getbitmap() async {
-    ByteData data = await rootBundle.load('assets/images/sample_page_2.jpg');
+    ByteData data = await rootBundle.load('assets/images/sticker5.jpeg');
     // final file = await DefaultCacheManager().getSingleFile(
     //     'github.com/Spriggan1992/test/blob/main/sample1_page-0001.jpg');
 
