@@ -19,10 +19,6 @@ import net.posprinter.utils.BitmapProcess
 
 /** XprinterPlugin */
 class XprinterPlugin: FlutterPlugin, MethodCallHandler {
-  /// The MethodChannel that will the communication between Flutter and native Android
-  ///
-  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-  /// when the Flutter Engine is detached from the Activity
   private lateinit var channel : MethodChannel
   private lateinit var context: Context
   private var curConnect: IDeviceConnection? = null
@@ -41,6 +37,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
   private fun connectTSC(ip: String) {
     POSConnect.init(context)
     curConnect = POSConnect.createDevice(3)
+
     curConnect!!.connect(ip) { code, _ ->
       when (code) {
         POSConnect.CONNECT_SUCCESS -> {
@@ -52,6 +49,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
       }
     }
     tscPrinter = TSCPrinter(curConnect)
+
   }
 
   private fun printBitmap(bitmapBytes: ByteArray, amount: Int) {
@@ -62,7 +60,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
       .cls()
       .bitmap(0, 0, TSCConst.BMP_MODE_XOR, 500, bitmap)
       .print(amount)
-//    disconnect()
     }
   private fun printBitmapFromPath(path: String, amount: Int) {
     val bitmap = BitmapFactory.decodeFile(path)
@@ -72,7 +69,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
       .cls()
       .bitmap(0, 0, TSCConst.BMP_MODE_XOR, 600, bitmap)
       .print(amount)
-//    disconnect()
   }
   private fun disconnect() {
     tscPrinter = null
@@ -94,6 +90,9 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
       }
       "check_connection"-> {
         result.success(tscPrinter != null)
+      }
+      "check_connection_with_status"-> {
+        result.success(isConnected != null && isConnected ==true)
       }
       "print" -> {
           val arguments = call.arguments as HashMap<*, *>
@@ -120,6 +119,9 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
           result.error("invalid_argument", "argument 'bitmapBytes' and 'amount' not found", null)
           disconnect()
         }
+      }
+      "disconnect"-> {
+        disconnect()
       }
       else -> result.notImplemented()
     }
