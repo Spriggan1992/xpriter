@@ -58,7 +58,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
     tscPrinter!!.sizeMm (70.0, 120.0)
       .gapMm(0.0, 0.0)
       .cls()
-      .bitmap(0, 0, TSCConst.BMP_MODE_XOR, 500, bitmap)
+      .bitmap(0, 0, TSCConst.BMP_MODE_XOR, 650, bitmap)
       .print(amount)
     }
   private fun printBitmapFromPath(path: String, amount: Int) {
@@ -92,7 +92,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
         result.success(tscPrinter != null)
       }
       "check_connection_with_status"-> {
-        result.success(isConnected != null && isConnected ==true)
+        result.success(isConnected != null && isConnected == true)
       }
       "print" -> {
           val arguments = call.arguments as HashMap<*, *>
