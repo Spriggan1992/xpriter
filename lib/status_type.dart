@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 enum StatusType {
   success(1),
   connectionFailed(2),
