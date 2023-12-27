@@ -91,7 +91,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
   }
 
   override fun onCancel(arguments: Any?) {
-    // Handle stream cancellation
     eventSink = null
   }
 
@@ -111,6 +110,10 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
         }
         POSConnect.SEND_FAIL -> {
           eventSink?.success(3)
+          eventSink?.success(false)
+        }
+        POSConnect.CONNECT_INTERRUPT -> {
+          eventSink?.success(4)
           eventSink?.success(false)
         }
       }
