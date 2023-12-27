@@ -17,14 +17,6 @@ class Xprinter {
     return await channel.disconnect();
   }
 
-  Future<bool> checkConnection() async {
-    return await channel.checkConnection();
-  }
-
-  Future<bool> checkConnectionWithStatus() async {
-    return await channel.checkConnectionWithStatus();
-  }
-
   Future<bool> sendToPrintBytes({
     required String ip,
     required Uint8List imageBytes,

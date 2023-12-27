@@ -32,12 +32,6 @@ class MethodChannelXprinter extends XprinterPlatform {
   }
 
   @override
-  Future<bool> checkConnection() async {
-    final status = await methodChannel.invokeMethod<bool>('check_connection');
-    return status ?? false;
-  }
-
-  @override
   Future<bool> sendToPrintBytes({
     required String ip,
     required Uint8List imageBytes,
@@ -61,13 +55,6 @@ class MethodChannelXprinter extends XprinterPlatform {
       'path': path,
       'amount': amount,
     });
-  }
-
-  @override
-  Future<bool> checkConnectionWithStatus() async {
-    final status =
-        await methodChannel.invokeMethod<bool>('check_connection_with_status');
-    return status ?? false;
   }
 
   @override
