@@ -25,7 +25,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
   private lateinit var context: Context
   private var curConnect: IDeviceConnection? = null
   private var tscPrinter  : TSCPrinter? = null
-  private  var isConnected : Boolean? = null
 
   private var eventSink: EventChannel.EventSink? = null
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -52,12 +51,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
         }else{
           result.error("invalid_argument", "argument 'ip' not found", null)
         }
-      }
-      "check_connection"-> {
-        result.success(tscPrinter != null)
-      }
-      "check_connection_with_status"-> {
-        result.success(isConnected != null && isConnected == true)
       }
       "print" -> {
           val arguments = call.arguments as HashMap<*, *>
@@ -112,15 +105,12 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
       when (code) {
         POSConnect.CONNECT_SUCCESS -> {
           eventSink?.success(1)
-          isConnected = true
         }
         POSConnect.CONNECT_FAIL -> {
           eventSink?.success(2)
-          isConnected = false
         }
         POSConnect.SEND_FAIL -> {
           eventSink?.success(3)
-          isConnected = false
         }
       }
     }
@@ -149,7 +139,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
   private fun disconnect() {
     tscPrinter = null
     curConnect?.close()
-    isConnected = null
   }
 }
 
