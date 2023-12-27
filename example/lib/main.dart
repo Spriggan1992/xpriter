@@ -10,9 +10,6 @@ import 'package:printing/printing.dart';
 import 'dart:async';
 // import 'package:pdf_render/pdf_render.dart';
 import 'package:xprinter/xprinter.dart';
-import 'package:pdf/pdf.dart' as pdf;
-import 'package:pdf/widgets.dart' as pw;
-import 'package:image/image.dart' as img;
 
 void main() {
   runApp(const MyApp());
@@ -28,7 +25,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
 
-  bool? _isLoading = null;
+  bool? _isLoading;
 
   final _xprinterPlugin = Xprinter();
 
@@ -60,8 +57,8 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> printBytes() async {
     final bytes = await PdfService().getbitmap();
-    final connection = await _xprinterPlugin.sendToPrintBytes(
-        ip: '192.168.1.99', imageBytes: bytes, amount: 1);
+    final connection =
+        await _xprinterPlugin.sendToPrintBytes(imageBytes: bytes, amount: 1);
     setState(() {
       _platformVersion = connection.toString();
     });

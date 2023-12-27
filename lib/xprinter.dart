@@ -20,13 +20,11 @@ class Xprinter {
   }
 
   Future<bool> sendToPrintBytes({
-    required String ip,
     required Uint8List imageBytes,
     required int amount,
   }) async {
     return await channel.sendToPrintBytes(
       imageBytes: imageBytes,
-      ip: ip,
       amount: amount,
     );
   }

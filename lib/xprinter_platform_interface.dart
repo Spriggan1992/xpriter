@@ -32,7 +32,6 @@ abstract class XprinterPlatform extends PlatformInterface {
   }
 
   Future<bool> sendToPrintBytes({
-    required String ip,
     required Uint8List imageBytes,
     required int amount,
   });

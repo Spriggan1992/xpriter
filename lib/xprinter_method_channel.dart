@@ -55,12 +55,10 @@ class MethodChannelXprinter extends XprinterPlatform {
 
   @override
   Future<bool> sendToPrintBytes({
-    required String ip,
     required Uint8List imageBytes,
     required int amount,
   }) async {
     return await methodChannel.invokeMethod('print', {
-      'ip': ip,
       'bitmapBytes': imageBytes,
       'amount': amount,
     });
