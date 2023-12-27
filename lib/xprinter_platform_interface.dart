@@ -24,7 +24,8 @@ abstract class XprinterPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Stream<int> get statusSubscription;
+  Stream<int> get statusStream;
+  Stream<bool> get loadingStream;
 
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');

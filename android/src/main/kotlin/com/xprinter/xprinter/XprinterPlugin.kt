@@ -25,7 +25,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
   private lateinit var context: Context
   private var curConnect: IDeviceConnection? = null
   private var tscPrinter  : TSCPrinter? = null
-
   private var eventSink: EventChannel.EventSink? = null
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
@@ -45,10 +44,12 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
       "connect"-> {
         val arguments = call.arguments as HashMap<*, *>
         if(arguments.containsKey("ip")){
+          eventSink?.success(true)
           val ip = arguments["ip"] as String
           connectTSC(ip)
           result.success(true)
         }else{
+          eventSink?.success(false)
           result.error("invalid_argument", "argument 'ip' not found", null)
         }
       }
@@ -62,7 +63,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
             result.success(true)
           } else {
             result.error("invalid_argument", "argument 'bitmapBytes' and 'amount' not found", null)
-            disconnect()
           }
         }
       "print_from_file" -> {
@@ -75,7 +75,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
           result.success(true)
         } else {
           result.error("invalid_argument", "argument 'bitmapBytes' and 'amount' not found", null)
-          disconnect()
         }
       }
       "disconnect"-> {
@@ -105,12 +104,15 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
       when (code) {
         POSConnect.CONNECT_SUCCESS -> {
           eventSink?.success(1)
+          eventSink?.success(false)
         }
         POSConnect.CONNECT_FAIL -> {
           eventSink?.success(2)
+          eventSink?.success(false)
         }
         POSConnect.SEND_FAIL -> {
           eventSink?.success(3)
+          eventSink?.success(false)
         }
       }
     }

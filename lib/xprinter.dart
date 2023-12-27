@@ -11,7 +11,9 @@ class Xprinter {
   }
 
   Stream<StatusType> get status =>
-      channel.statusSubscription.map((event) => StatusType.fromValue(event));
+      channel.statusStream.map((event) => StatusType.fromValue(event));
+
+  Stream<bool> get loading => channel.loadingStream.map((event) => event);
 
   Future<void> disconnect() async {
     return await channel.disconnect();

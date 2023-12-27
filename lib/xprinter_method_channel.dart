@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -5,6 +7,10 @@ import 'xprinter_platform_interface.dart';
 
 /// An implementation of [XprinterPlatform] that uses method channels.
 class MethodChannelXprinter extends XprinterPlatform {
+  MethodChannelXprinter() {
+    _listenEvents();
+  }
+
   /// The method channel used to interact with the native platform.
   @visibleForTesting
   final methodChannel = const MethodChannel('xprinter');
@@ -12,10 +18,26 @@ class MethodChannelXprinter extends XprinterPlatform {
   @visibleForTesting
   final eventChannel = const EventChannel('xprinter_event');
 
+  final StreamController<int> _status = StreamController();
+
+  final StreamController<bool> _loading = StreamController();
+
   @override
-  Stream<int> get statusSubscription => eventChannel
-      .receiveBroadcastStream()
-      .map((dynamic result) => result as int);
+  Stream<int> get statusStream => _status.stream;
+
+  @override
+  Stream<bool> get loadingStream => _loading.stream;
+
+  void _listenEvents() {
+    eventChannel.receiveBroadcastStream().listen((event) {
+      if (event is bool) {
+        _loading.sink.add(event);
+      }
+      if (event is int) {
+        _status.sink.add(event);
+      }
+    });
+  }
 
   @override
   Future<String?> getPlatformVersion() async {

@@ -27,6 +27,9 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
+
+  bool? _isLoading = null;
+
   final _xprinterPlugin = Xprinter();
 
   @override
@@ -36,6 +39,12 @@ class _MyAppState extends State<MyApp> {
       log(event.statusString);
       setState(() {
         _platformVersion = event.statusString;
+      });
+    });
+    _xprinterPlugin.loading.listen((event) {
+      log(event.toString());
+      setState(() {
+        _isLoading = event;
       });
     });
     super.initState();
@@ -71,7 +80,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> connect() async {
     // final bytes = await PdfService().getbitmap();
-    final connection = await _xprinterPlugin.connect('192.168.1.99');
+    final connection = await _xprinterPlugin.connect('192.168.1.92');
     setState(() {
       _platformVersion = connection.toString();
     });
@@ -89,6 +98,7 @@ class _MyAppState extends State<MyApp> {
             Center(
               child: Text('Running on: $_platformVersion'),
             ),
+            Text('IS LOADING: $_isLoading'),
             const SizedBox(height: 20),
             ElevatedButton(
                 onPressed: () async => await connect(),
