@@ -10,7 +10,12 @@ class MethodChannelXprinter extends XprinterPlatform {
   final methodChannel = const MethodChannel('xprinter');
 
   @visibleForTesting
-  final eventChannel = const EventChannel('xprinter');
+  final eventChannel = const EventChannel('xprinter_event');
+
+  @override
+  Stream<int> get statusSubscription => eventChannel
+      .receiveBroadcastStream()
+      .map((dynamic result) => result as int);
 
   @override
   Future<String?> getPlatformVersion() async {

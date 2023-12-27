@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.os.StrictMode
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.plugin.common.EventChannel
 
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -18,63 +19,27 @@ import net.posprinter.utils.BitmapProcess
 
 
 /** XprinterPlugin */
-class XprinterPlugin: FlutterPlugin, MethodCallHandler {
+class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler {
   private lateinit var channel : MethodChannel
+
   private lateinit var context: Context
   private var curConnect: IDeviceConnection? = null
   private var tscPrinter  : TSCPrinter? = null
   private  var isConnected : Boolean? = null
 
+  private var eventSink: EventChannel.EventSink? = null
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
     StrictMode.setThreadPolicy(policy)
-    
+
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "xprinter")
+    EventChannel(flutterPluginBinding.binaryMessenger, "xprinter_event").setStreamHandler(this)
+
     channel.setMethodCallHandler(this)
     context = flutterPluginBinding.applicationContext
   }
 
-  private fun connectTSC(ip: String) {
-    POSConnect.init(context)
-    curConnect = POSConnect.createDevice(3)
 
-    curConnect!!.connect(ip) { code, _ ->
-      when (code) {
-        POSConnect.CONNECT_SUCCESS -> {
-          isConnected = true
-        }
-        POSConnect.CONNECT_FAIL -> {
-          isConnected = false
-        }
-      }
-    }
-    tscPrinter = TSCPrinter(curConnect)
-
-  }
-
-  private fun printBitmap(bitmapBytes: ByteArray, amount: Int) {
-    val bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.size)
-
-    tscPrinter!!.sizeMm (70.0, 120.0)
-      .gapMm(0.0, 0.0)
-      .cls()
-      .bitmap(0, 0, TSCConst.BMP_MODE_XOR, 590, bitmap)
-      .print(amount)
-    }
-  private fun printBitmapFromPath(path: String, amount: Int) {
-    val bitmap = BitmapFactory.decodeFile(path)
-
-    tscPrinter!!.sizeMm (70.0, 120.0)
-      .gapMm(0.0, 0.0)
-      .cls()
-      .bitmap(0, 0, TSCConst.BMP_MODE_XOR, 600, bitmap)
-      .print(amount)
-  }
-  private fun disconnect() {
-    tscPrinter = null
-    curConnect?.close()
-    isConnected = null
-  }
 
   override fun onMethodCall(call: MethodCall, result: Result) {
     when (call.method) {
@@ -129,5 +94,64 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler {
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
   }
+
+  override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+    eventSink = events
+  }
+
+  override fun onCancel(arguments: Any?) {
+    // Handle stream cancellation
+    eventSink = null
+  }
+
+  private fun connectTSC(ip: String) {
+    POSConnect.init(context)
+    curConnect = POSConnect.createDevice(3)
+
+    curConnect!!.connect(ip) { code, _ ->
+      when (code) {
+        POSConnect.CONNECT_SUCCESS -> {
+          eventSink?.success(1)
+          isConnected = true
+        }
+        POSConnect.CONNECT_FAIL -> {
+          eventSink?.success(2)
+          isConnected = false
+        }
+        POSConnect.SEND_FAIL -> {
+          eventSink?.success(3)
+          isConnected = false
+        }
+      }
+    }
+    tscPrinter = TSCPrinter(curConnect)
+
+  }
+
+  private fun printBitmap(bitmapBytes: ByteArray, amount: Int) {
+    val bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.size)
+
+    tscPrinter!!.sizeMm (70.0, 120.0)
+      .gapMm(0.0, 0.0)
+      .cls()
+      .bitmap(0, 0, TSCConst.BMP_MODE_XOR, 590, bitmap)
+      .print(amount)
+  }
+  private fun printBitmapFromPath(path: String, amount: Int) {
+    val bitmap = BitmapFactory.decodeFile(path)
+
+    tscPrinter!!.sizeMm (70.0, 120.0)
+      .gapMm(0.0, 0.0)
+      .cls()
+      .bitmap(0, 0, TSCConst.BMP_MODE_XOR, 600, bitmap)
+      .print(amount)
+  }
+  private fun disconnect() {
+    tscPrinter = null
+    curConnect?.close()
+    isConnected = null
+  }
 }
+
+
 

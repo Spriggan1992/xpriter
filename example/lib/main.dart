@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -30,6 +31,13 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    connect();
+    _xprinterPlugin.status.listen((event) {
+      log(event.statusString);
+      setState(() {
+        _platformVersion = event.statusString;
+      });
+    });
     super.initState();
   }
 
