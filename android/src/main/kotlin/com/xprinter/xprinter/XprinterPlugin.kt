@@ -47,7 +47,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
           eventSink?.success(true)
           val ip = arguments["ip"] as String
           connectTSC(ip)
-          result.success(true)
         }else{
           eventSink?.success(false)
           result.error("invalid_argument", "argument 'ip' not found", null)
@@ -98,6 +97,8 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
 
   private fun connectTSC(ip: String) {
     POSConnect.init(context)
+    curConnect?.close()
+    curConnect = null
     curConnect = POSConnect.createDevice(3)
 
     curConnect!!.connect(ip) { code, _ ->
