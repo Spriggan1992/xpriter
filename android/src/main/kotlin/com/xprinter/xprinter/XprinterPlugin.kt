@@ -47,7 +47,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
           eventSink?.success(true)
           val ip = arguments["ip"] as String
           connectTSC(ip)
-          result.success(curConnect?.isConnect?: false)
+          result.success(true)
         }else{
           eventSink?.success(false)
           result.error("invalid_argument", "argument 'ip' not found", null)
@@ -63,7 +63,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
             val bitmapBytes = arguments["bitmapBytes"] as ByteArray
             val amount = arguments["amount"] as Int
             printBitmap(bitmapBytes, amount)
-
             result.success(true)
           } else {
             result.error("invalid_argument", "argument 'bitmapBytes' and 'amount' not found", null)
@@ -83,7 +82,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
       }
       "disconnect"-> {
         disconnect()
-        result.success(curConnect?.isConnect)
       }
       else -> result.notImplemented()
     }
@@ -104,7 +102,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
     disconnect()
     POSConnect.init(context)
     curConnect = POSConnect.createDevice(3)
-    curConnect!!.connect(ip) { code, _ ->
+    curConnect?.connect(ip) { code, _ ->
       when (code) {
         POSConnect.CONNECT_SUCCESS -> {
           eventSink?.success(1)
