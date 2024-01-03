@@ -82,6 +82,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
       }
       "disconnect"-> {
         disconnect()
+        result.success(true)
       }
       else -> result.notImplemented()
     }
