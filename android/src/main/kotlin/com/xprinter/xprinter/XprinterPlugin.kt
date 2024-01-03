@@ -146,7 +146,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
   }
   private fun disconnect() {
     curConnect?.close()
-    tscPrinter = null
   }
 }
 
