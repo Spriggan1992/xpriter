@@ -19,7 +19,7 @@ class Xprinter {
 
   Stream<bool> get loading => channel.loadingStream.map((event) => event);
 
-  Future<void> disconnect() async {
+  Future<bool> disconnect() async {
     return await channel.disconnect();
   }
 
