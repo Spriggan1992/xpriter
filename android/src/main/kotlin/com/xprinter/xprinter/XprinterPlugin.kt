@@ -20,15 +20,12 @@ import net.posprinter.utils.BitmapProcess
 
 /** XprinterPlugin */
 class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler {
-
-
   private lateinit var channel : MethodChannel
 
   private lateinit var context: Context
   private var curConnect: IDeviceConnection? = null
   private var tscPrinter  : TSCPrinter? = null
   private var eventSink: EventChannel.EventSink? = null
-
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
     StrictMode.setThreadPolicy(policy)
@@ -38,7 +35,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
 
     channel.setMethodCallHandler(this)
     context = flutterPluginBinding.applicationContext
-    POSConnect.init(context)
   }
 
 
@@ -48,6 +44,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
       "connect"-> {
         val arguments = call.arguments as HashMap<*, *>
         if(arguments.containsKey("ip")){
+          eventSink?.success(true)
           val ip = arguments["ip"] as String
           connectTSC(ip)
           result.success(true)
@@ -103,6 +100,8 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
   }
 
   private fun connectTSC(ip: String) {
+    disconnect()
+    POSConnect.init(context)
     curConnect = POSConnect.createDevice(3)
     curConnect?.connect(ip) { code, _ ->
       when (code) {
