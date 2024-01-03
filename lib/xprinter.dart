@@ -10,6 +10,10 @@ class Xprinter {
     return await channel.connect(ip);
   }
 
+  Future<bool> checkConnection() async {
+    return await channel.checkConnection();
+  }
+
   Stream<StatusType> get status =>
       channel.statusStream.map((event) => StatusType.fromValue(event));
 

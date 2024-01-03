@@ -81,4 +81,9 @@ class MethodChannelXprinter extends XprinterPlatform {
   Future<void> disconnect() async {
     await methodChannel.invokeMethod<bool>('disconnect');
   }
+
+  @override
+  Future<bool> checkConnection() async {
+    return await methodChannel.invokeMethod<bool>('check_connection') ?? false;
+  }
 }
