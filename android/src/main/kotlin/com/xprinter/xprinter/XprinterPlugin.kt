@@ -47,10 +47,14 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
           eventSink?.success(true)
           val ip = arguments["ip"] as String
           connectTSC(ip)
+          result.success(curConnect?.isConnect?: false)
         }else{
           eventSink?.success(false)
           result.error("invalid_argument", "argument 'ip' not found", null)
         }
+      }
+      "check_connection"->{
+        result.success(curConnect?.isConnect?: false)
       }
       "print" -> {
           val arguments = call.arguments as HashMap<*, *>

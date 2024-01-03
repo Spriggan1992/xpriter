@@ -31,19 +31,19 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    connect();
-    _xprinterPlugin.status.listen((event) {
-      log(event.statusString);
-      setState(() {
-        _platformVersion = event.statusString;
-      });
-    });
-    _xprinterPlugin.loading.listen((event) {
-      log(event.toString());
-      setState(() {
-        _isLoading = event;
-      });
-    });
+    // connect();
+    // _xprinterPlugin.status.listen((event) {
+    //   log(event.statusString);
+    //   setState(() {
+    //     _platformVersion = event.statusString;
+    //   });
+    // });
+    // _xprinterPlugin.loading.listen((event) {
+    //   log(event.toString());
+    //   setState(() {
+    //     _isLoading = event;
+    //   });
+    // });
     super.initState();
   }
 
@@ -77,7 +77,17 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> connect() async {
     // final bytes = await PdfService().getbitmap();
-    final connection = await _xprinterPlugin.connect('192.168.1.92');
+    await _xprinterPlugin.connect('192.168.1.99');
+  }
+
+  Future<void> disconnect() async {
+    // final bytes = await PdfService().getbitmap();
+    await _xprinterPlugin.disconnect();
+  }
+
+  Future<void> checkConnect() async {
+    // final bytes = await PdfService().getbitmap();
+    final connection = await _xprinterPlugin.checkConnection();
     setState(() {
       _platformVersion = connection.toString();
     });
@@ -95,17 +105,19 @@ class _MyAppState extends State<MyApp> {
             Center(
               child: Text('Running on: $_platformVersion'),
             ),
-            Text('IS LOADING: $_isLoading'),
             const SizedBox(height: 20),
             ElevatedButton(
                 onPressed: () async => await connect(),
                 child: const Text('connect')),
             ElevatedButton(
-                onPressed: () async => await printBytes(),
-                child: const Text('printBytes')),
+                onPressed: () async => await disconnect(),
+                child: const Text('disconnect')),
             ElevatedButton(
-                onPressed: () async => await printFilePath(),
-                child: const Text('printFilePath')),
+                onPressed: () async => await printBytes(),
+                child: const Text('print bytes')),
+            ElevatedButton(
+                onPressed: () async => await checkConnect(),
+                child: const Text('check connection')),
           ],
         ),
       ),

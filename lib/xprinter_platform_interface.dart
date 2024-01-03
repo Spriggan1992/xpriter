@@ -44,5 +44,7 @@ abstract class XprinterPlatform extends PlatformInterface {
 
   Future<bool> connect(String ip);
 
+  Future<bool> checkConnection();
+
   Future<void> disconnect();
 }
