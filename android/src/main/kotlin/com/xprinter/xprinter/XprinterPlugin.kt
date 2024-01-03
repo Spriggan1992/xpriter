@@ -103,9 +103,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
   }
 
   private fun connectTSC(ip: String) {
-    disconnect()
-
-
     curConnect = POSConnect.createDevice(3)
     curConnect?.connect(ip) { code, _ ->
       when (code) {
