@@ -135,6 +135,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
       .cls()
       .bitmap(0, 0, TSCConst.BMP_MODE_XOR, 590, bitmap)
       .print(amount)
+      disconnect()
   }
   private fun printBitmapFromPath(path: String, amount: Int) {
     val bitmap = BitmapFactory.decodeFile(path)
