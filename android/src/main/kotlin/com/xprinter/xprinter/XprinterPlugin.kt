@@ -59,6 +59,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
             val bitmapBytes = arguments["bitmapBytes"] as ByteArray
             val amount = arguments["amount"] as Int
             printBitmap(bitmapBytes, amount)
+
             result.success(true)
           } else {
             result.error("invalid_argument", "argument 'bitmapBytes' and 'amount' not found", null)
@@ -130,6 +131,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
       .cls()
       .bitmap(0, 0, TSCConst.BMP_MODE_XOR, 590, bitmap)
       .print(amount)
+      disconnect()
   }
   private fun printBitmapFromPath(path: String, amount: Int) {
     val bitmap = BitmapFactory.decodeFile(path)
