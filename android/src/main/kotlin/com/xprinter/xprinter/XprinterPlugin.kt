@@ -21,8 +21,8 @@ import net.posprinter.utils.BitmapProcess
 /** XprinterPlugin */
 class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandler {
   private lateinit var channel : MethodChannel
-
   private lateinit var context: Context
+
   private var curConnect: IDeviceConnection? = null
   private var tscPrinter  : TSCPrinter? = null
   private var eventSink: EventChannel.EventSink? = null
@@ -133,7 +133,7 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
     tscPrinter!!.sizeMm (70.0, 120.0)
       .gapMm(0.0, 0.0)
       .cls()
-      .bitmap(0, 0, TSCConst.BMP_MODE_XOR, 590, bitmap)
+      .bitmap(0, 0, TSCConst.BMP_MODE_XOR, 570, bitmap)
       .print(amount)
   }
   private fun printBitmapFromPath(path: String, amount: Int) {
@@ -147,7 +147,6 @@ class XprinterPlugin: FlutterPlugin, MethodCallHandler, EventChannel.StreamHandl
   }
   private fun disconnect() {
     curConnect?.close()
-    tscPrinter = null
   }
 }
 

@@ -1,10 +1,11 @@
 import 'package:flutter/services.dart';
 import 'package:xprinter/status_type.dart';
+import 'package:xprinter/xprinter_platform_interface.dart';
 
 import 'xprinter_method_channel.dart';
 
 class Xprinter {
-  final channel = MethodChannelXprinter();
+  final XprinterPlatform channel = MethodChannelXprinter();
 
   Future<bool> connect(String ip) async {
     return await channel.connect(ip);
