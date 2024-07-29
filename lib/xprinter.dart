@@ -15,8 +15,9 @@ class Xprinter {
     return await channel.checkConnection();
   }
 
-  Stream<StatusType> get status =>
-      channel.statusStream.map((event) => StatusType.fromValue(event));
+  Stream<StatusType> get status async* {
+    yield* channel.statusStream.map((event) => StatusType.fromValue(event));
+  }
 
   Stream<bool> get loading => channel.loadingStream.map((event) => event);
 
